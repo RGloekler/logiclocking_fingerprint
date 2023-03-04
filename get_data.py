@@ -8,16 +8,21 @@ from tqdm import tqdm
 
 def main():
     attack_miter('MKR532xz_final_netlist.v', 'output_test.txt', 2, 'xor_lock', 10)
+    attack_miter('MKR532xz_final_netlist.v', 'output_test.txt', 2, 'mux_lock', 10)
+    #attack_miter('MKR532xz_final_netlist.v', 'output_test.txt', 2, 'random_lut_lock', 2)
+    attack_miter('MKR532xz_final_netlist.v', 'output_test.txt', 2, 'lut_lock', 10)
+    #attack_miter('MKR532xz_final_netlist.v', 'output_test.txt', 2, 'tt_lock', 2)
+    attack_miter('MKR532xz_final_netlist.v', 'output_test.txt', 2, 'sfll_hd', 2)
     return
 
 def attack_miter(infile, outfile, numgates, lock, iterations):
     # determine locking to use, and catch improper locking method
-    lock_types = ['xor_lock', 'mux_lock', 'random lut lock', 'lut_lock', 'tt_lock', 'sfll_hd']
+    lock_types = ['xor_lock', 'mux_lock', 'random_lut_lock', 'lut_lock', 'tt_lock', 'sfll_hd']
     if lock not in lock_types: exit('Lock not found.')
 
     # setup locking and output file
     outstr = lock + ' ' + infile + ' ' + 'x_gates,' + str(iterations) + ' iterations'
-    f = open(outfile, 'w')
+    f = open(outfile, 'a')
     f.write(outstr + '\nIteration, attack time\n')
 
     # grab the correct file
@@ -96,6 +101,8 @@ def attack_miter(infile, outfile, numgates, lock, iterations):
             f.write(write_str)
             f.write('\n')
         print('Done, output written to ', outfile)
+        f.write('\n')
+    print('\n')
     f.close()
 
 if __name__ == "__main__":
